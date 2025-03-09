@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 // Define Job Type
 interface Job {
@@ -69,6 +70,7 @@ const JobForm = ({ job, setJob, onSubmit, isEditing }: JobFormProps) => {
 
 // Main Job Manager Component
 export default function JobManager() {
+    const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [newJob, setNewJob] = useState<Omit<Job, "id">>({
         title: "",
@@ -179,6 +181,7 @@ export default function JobManager() {
                                     </DialogContent>
                                 </Dialog>
                                 <Button variant="destructive" onClick={() => deleteJob(job.id)}>Delete</Button>
+                                <Button variant="outline" onClick={() => navigate(`/applicants/${job.id}`)}>View Applicants</Button>
                             </TableCell>
                         </TableRow>
                     ))}
