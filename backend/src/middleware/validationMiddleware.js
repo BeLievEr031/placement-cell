@@ -89,3 +89,9 @@ export const validateTraining = (data) => {
 
     return null;
 };
+
+export const lectureSchema = Joi.object({
+    trainingId: Joi.string().required(),
+    title: Joi.string().min(3).max(100).required(),
+    videoUrl: Joi.string().uri().required()
+});

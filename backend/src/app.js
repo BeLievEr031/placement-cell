@@ -6,6 +6,7 @@ import jobRouter from "./routes/jobRoutes.js";
 import applicantsRouter from "./routes/applicantsRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
 import trainingRouter from "./routes/trainingRoutes.js";
+import lectureRouter from "./routes/lectureRoutes.js";
 const app = express();
 
 app.use(express.json({ limit: "1MB" }))
@@ -19,5 +20,6 @@ app.use("/api/v1/placement/job", jobRouter)
 app.use("/api/v1/placement/applicants", applicantsRouter)
 app.use("/api/v1/placement/event", eventRouter)
 app.use("/api/v1/placement/training", trainingRouter)
+app.use("/api/v1/placement/lecture", lectureRouter)
 
 export default app;

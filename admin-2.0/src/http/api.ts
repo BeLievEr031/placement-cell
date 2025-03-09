@@ -2,6 +2,7 @@ import { Job } from "@/pages/Jobs/Jobs";
 import { Event } from "@/pages/Event/Event";
 import api from ".";
 import { TrainingProgram } from "@/pages/Training/Training";
+import { Lecture } from "@/pages/AddVideos/AddVideos";
 
 export const createNewJob = (data: Job) => api.post("/job", data)
 export const fetchJob = () => api.get("/job")
@@ -17,3 +18,8 @@ export const createNewTraining = (data: TrainingProgram) => api.post("/training"
 export const fetchTraining = () => api.get("/training")
 export const filterTraining = (query: { title: string, jobType: string }) => api.get(`/training/filter?title=${query.title}&jobType=${query.jobType}`)
 export const deleteTraining = (id: string) => api.delete(`/training/${id}`)
+
+export const createNewLecture = (data: Lecture) => api.post("/lecture", data)
+export const fetchLecture = (trainingId: string) => api.get(`/lecture?trainingId=${trainingId}`)
+export const filterLecture = (query: { title: string, jobType: string }) => api.get(`/lecture/filter?title=${query.title}&jobType=${query.jobType}`)
+export const deleteLecture = (id: string) => api.delete(`/lecture/${id}`)
