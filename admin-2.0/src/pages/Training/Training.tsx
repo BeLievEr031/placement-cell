@@ -9,24 +9,19 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { useCreateNewTrainingMutation, useDeleteTrainingMutation, useFetchTrainingQuery } from "@/hook/useTraining";
 
 // Define Training Program Type
-interface TrainingProgram {
+export interface TrainingProgram {
+    _id?: string;
     id: number;
     title: string;
     level: string;
     duration: string;
     price: string;
     description: string;
-    lectures: Lecture[];
 }
 
-// Define Lecture Type
-interface Lecture {
-    id: number;
-    title: string;
-    videoUrl: string;
-}
 
 // Training Form Component
 interface TrainingFormProps {
@@ -65,8 +60,36 @@ const TrainingForm = ({ program, setProgram, onSubmit, isEditing }: TrainingForm
     );
 };
 
+// Validation function with Sonner error messages
+const validateTraining = (program: Omit<TrainingProgram, "id"> | TrainingProgram): boolean => {
+    if (!program.title.trim()) {
+        toast.error("Title is required!");
+        return false;
+    }
+    if (!program.level) {
+        toast.error("Level is required!");
+        return false;
+    }
+    if (!program.duration.trim()) {
+        toast.error("Duration is required!");
+        return false;
+    }
+    if (!program.price.trim() || isNaN(Number(program.price)) || Number(program.price) < 0) {
+        toast.error("Valid price is required!");
+        return false;
+    }
+    if (!program.description.trim() || program.description.length < 10) {
+        toast.error("Description must be at least 10 characters long!");
+        return false;
+    }
+    return true;
+};
+
 // Main Training Page Component
 export default function Training() {
+    const { mutate } = useCreateNewTrainingMutation();
+    const { mutate: deleteMuatate } = useDeleteTrainingMutation();
+    const { data } = useFetchTrainingQuery();
     const navigate = useNavigate();
     const [trainings, setTrainings] = useState<TrainingProgram[]>([]);
     const [newTraining, setNewTraining] = useState<Omit<TrainingProgram, "id">>({
@@ -75,7 +98,6 @@ export default function Training() {
         duration: "",
         price: "",
         description: "",
-        lectures: [],
     });
 
     const [editTraining, setEditTraining] = useState<TrainingProgram | null>(null);
@@ -83,19 +105,16 @@ export default function Training() {
     const [isEditing, setIsEditing] = useState(false);
 
     const addTraining = () => {
-        if (!newTraining.title || !newTraining.level || !newTraining.duration || !newTraining.price || !newTraining.description) {
-            toast.error("All fields are required!");
-            return;
-        }
-
-        setTrainings([...trainings, { ...newTraining, id: trainings.length + 1 }]);
-        setNewTraining({ title: "", level: "", duration: "", price: "", description: "", lectures: [] });
+        if (!validateTraining(newTraining)) return;
+        mutate(newTraining as TrainingProgram);
+        // setTrainings([...trainings, { ...newTraining, id: trainings.length + 1 }]);
+        // setNewTraining({ title: "", level: "", duration: "", price: "", description: "", lectures: [] });
         setIsDialogOpen(false);
         toast.success("Training added successfully!");
     };
 
     const updateTraining = () => {
-        if (editTraining) {
+        if (editTraining && validateTraining(editTraining)) {
             setTrainings(trainings.map((t) => (t.id === editTraining.id ? editTraining : t)));
             setEditTraining(null);
             setIsDialogOpen(false);
@@ -104,16 +123,19 @@ export default function Training() {
         }
     };
 
-    const deleteTraining = (id: number) => {
-        setTrainings(trainings.filter((t) => t.id !== id));
+    const deleteTraining = (id: string) => {
+        deleteMuatate(id)
         toast.success("Training deleted successfully");
     };
+
+    console.log(data?.data);
+
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-6">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                    <Button onClick={() => { setIsEditing(false); setNewTraining({ title: "", level: "", duration: "", price: "", description: "", lectures: [] }); }}>
+                    <Button onClick={() => { setIsEditing(false); setNewTraining({ title: "", level: "", duration: "", price: "", description: "", }); }}>
                         Add Training
                     </Button>
                 </DialogTrigger>
@@ -138,7 +160,7 @@ export default function Training() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {trainings.map((program) => (
+                    {data?.data?.trainings.length > 0 && data?.data?.trainings.map((program: TrainingProgram) => (
                         <TableRow key={program.id}>
                             <TableCell>{program.title}</TableCell>
                             <TableCell>{program.level}</TableCell>
@@ -154,14 +176,14 @@ export default function Training() {
                                     <DialogContent>
                                         <TrainingForm
                                             program={editTraining as TrainingProgram}
-                                            setProgram={setEditTraining}
+                                            setProgram={(training) => setEditTraining(training as TrainingProgram)}
                                             onSubmit={updateTraining}
                                             isEditing={true}
                                         />
                                     </DialogContent>
                                 </Dialog>
-                                <Button variant="destructive" onClick={() => deleteTraining(program.id)}>Delete</Button>
-                                <Button onClick={() => navigate(`/add-videos/${program.id}`)}>Manage Videos</Button>
+                                <Button variant="destructive" onClick={() => deleteTraining(program._id!)}>Delete</Button>
+                                <Button onClick={() => navigate(`/add-videos/${program.title + "-" + program._id!}`)}>Manage Videos</Button>
                             </TableCell>
                         </TableRow>
                     ))}
