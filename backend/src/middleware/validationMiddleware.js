@@ -20,3 +20,24 @@ export const validateJob = (req, res, next) => {
     }
     next();
 };
+
+export const applicantSchema = Joi.object({
+    clerkId: Joi.string().required(),
+    name: Joi.string().min(3).max(100).required(),
+    phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+        "string.pattern.base": "Phone number must be 10 digits.",
+    }),
+    email: Joi.string().email().required(),
+    address: Joi.string().min(5).required(),
+    resumeUrl: Joi.string().uri().required().messages({
+        "string.uri": "Resume URL must be a valid link.",
+    }),
+});
+
+export const validateApplicants = (req, res, next) => {
+    const { error } = jobSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    next();
+};

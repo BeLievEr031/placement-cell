@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express"
 import cors from "cors"
 import jobRouter from "./routes/jobRoutes.js";
+import applicantsRouter from "./routes/applicantsRoutes.js";
 const app = express();
 
 app.use(express.json({ limit: "1MB" }))
@@ -13,4 +14,5 @@ app.use(cors({
 }))
 
 app.use("/api/v1/placement/job", jobRouter)
+app.use("/api/v1/placement/applicants", applicantsRouter)
 export default app;
