@@ -8,6 +8,7 @@ const applicantSchema = new mongoose.Schema(
         email: { type: String, required: true, unique: true, trim: true, lowercase: true, match: /^\S+@\S+\.\S+$/ },
         address: { type: String, required: true, trim: true },
         resumeUrl: { type: String, required: true, trim: true, match: /^https?:\/\/.+/ }, // Ensures valid URL
+        percentage: { type: Number, required: true }
     },
     {
         timestamps: true, // Adds createdAt & updatedAt fields
