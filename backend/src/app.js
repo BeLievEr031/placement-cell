@@ -4,6 +4,7 @@ import express from "express"
 import cors from "cors"
 import jobRouter from "./routes/jobRoutes.js";
 import applicantsRouter from "./routes/applicantsRoutes.js";
+import eventRouter from "./routes/eventRoutes.js";
 const app = express();
 
 app.use(express.json({ limit: "1MB" }))
@@ -15,4 +16,5 @@ app.use(cors({
 
 app.use("/api/v1/placement/job", jobRouter)
 app.use("/api/v1/placement/applicants", applicantsRouter)
+app.use("/api/v1/placement/event", eventRouter)
 export default app;

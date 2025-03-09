@@ -41,3 +41,15 @@ export const validateApplicants = (req, res, next) => {
     }
     next();
 };
+
+export const eventSchema = Joi.object({
+    title: Joi.string().min(3).max(100).required(),
+    startDate: Joi.date().iso().required().messages({
+        "date.format": "Start date must be in ISO format (YYYY-MM-DD).",
+    }),
+    endDate: Joi.date().iso().required().greater(Joi.ref("startDate")).messages({
+        "date.greater": "End date must be after the start date.",
+    }),
+    location: Joi.string().min(3).max(200).required(),
+    description: Joi.string().allow("").optional(),
+});
