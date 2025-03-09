@@ -54,3 +54,38 @@ export const eventSchema = Joi.object({
     location: Joi.string().min(3).max(200).required(),
     description: Joi.string().allow("").optional(),
 });
+
+const trainingSchema = Joi.object({
+    title: Joi.string().trim().min(1).required().messages({
+        "string.empty": "Title is required",
+        "any.required": "Title is required",
+    }),
+    level: Joi.string().valid("Beginner", "Intermediate", "Advanced", "Expert").required().messages({
+        "any.only": "Invalid level selected. Choose from Beginner, Intermediate, Advanced, or Expert.",
+        "any.required": "Level is required",
+    }),
+    duration: Joi.string().trim().min(1).required().messages({
+        "string.empty": "Duration is required",
+        "any.required": "Duration is required",
+    }),
+    price: Joi.number().min(0).required().messages({
+        "number.base": "Valid price is required",
+        "number.min": "Price cannot be negative",
+        "any.required": "Price is required",
+    }),
+    description: Joi.string().trim().min(10).required().messages({
+        "string.empty": "Description is required",
+        "string.min": "Description must be at least 10 characters long",
+        "any.required": "Description is required",
+    }),
+});
+
+export const validateTraining = (data) => {
+    const { error } = trainingSchema.validate(data, { abortEarly: false });
+
+    if (error) {
+        return error.details.map((err) => err.message).join(", ");
+    }
+
+    return null;
+};
