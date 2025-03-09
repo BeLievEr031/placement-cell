@@ -44,6 +44,7 @@ export const validateApplicants = (req, res, next) => {
 
 export const eventSchema = Joi.object({
     title: Joi.string().min(3).max(100).required(),
+    type: Joi.string().min(3).max(100).required(),
     startDate: Joi.date().iso().required().messages({
         "date.format": "Start date must be in ISO format (YYYY-MM-DD).",
     }),
