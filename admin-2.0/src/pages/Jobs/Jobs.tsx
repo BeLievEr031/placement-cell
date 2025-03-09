@@ -7,9 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { useCreateNewJobMutation, useDeleteJobMutation, useFetchJobQuery } from "@/hook/useJob";
+import { toast, Toaster } from "sonner";
 
 // Define Job Type
-interface Job {
+export interface Job {
+    _id?: string;
     id: number;
     title: string;
     company: string;
@@ -70,6 +73,8 @@ const JobForm = ({ job, setJob, onSubmit, isEditing }: JobFormProps) => {
 
 // Main Job Manager Component
 export default function JobManager() {
+    const { mutate } = useCreateNewJobMutation();
+    const { data } = useFetchJobQuery();
     const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [newJob, setNewJob] = useState<Omit<Job, "id">>({
@@ -87,19 +92,65 @@ export default function JobManager() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    const validateJobForm = (job: Omit<Job, "id"> | Job) => {
+        let isValid = true;
+
+        if (!job.title.trim() || job.title.length < 3 || job.title.length > 100) {
+            toast.error("Job title must be between 3-100 characters.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.company.trim() || job.company.length < 3 || job.company.length > 100) {
+            toast.error("Company name must be between 3-100 characters.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.location.trim() || job.location.length < 3 || job.location.length > 100) {
+            toast.error("Location must be between 3-100 characters.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.salary.trim() || isNaN(Number(job.salary)) || Number(job.salary) <= 0) {
+            toast.error("Salary must be a positive number.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.description.trim() || job.description.length < 10) {
+            toast.error("Description must be at least 10 characters long.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.jobType) {
+            toast.error("Job type is required.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.deadline.trim()) {
+            toast.error("Deadline is required.");
+            isValid = false;
+            return;
+        }
+
+        if (!job.requirements.trim() || job.requirements.length < 5) {
+            toast.error("Requirements must be at least 5 characters long.");
+            isValid = false;
+            return;
+        }
+
+        return isValid;
+    };
+
     // Add new job
     const addJob = () => {
-        setJobs([...jobs, { ...newJob, id: jobs.length + 1 }]);
-        setNewJob({
-            title: "",
-            company: "",
-            location: "",
-            salary: "",
-            description: "",
-            jobType: "Full-time",
-            deadline: "",
-            requirements: "",
-        });
+        if (!validateJobForm(newJob)) return; // Stop if validation fails
+        mutate(newJob as Job);
+        toast.success("Job added successfully!");
         setIsDialogOpen(false);
     };
 
@@ -113,10 +164,16 @@ export default function JobManager() {
         }
     };
 
+    const { mutate: deleteMutate } = useDeleteJobMutation()
+
     // Delete job
-    const deleteJob = (id: number) => {
-        setJobs(jobs.filter((job) => job.id !== id));
+    const deleteJob = (id: string) => {
+        // setJobs(jobs.filter((job) => job.id !== id));
+        deleteMutate(id)
     };
+
+    console.log(data?.data);
+
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -155,14 +212,14 @@ export default function JobManager() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {jobs.map((job) => (
+                    {data?.data.length > 0 && data?.data.map((job: Job) => (
                         <TableRow key={job.id}>
                             <TableCell>{job.title}</TableCell>
                             <TableCell>{job.company}</TableCell>
                             <TableCell>{job.location}</TableCell>
                             <TableCell>{job.salary}</TableCell>
                             <TableCell>{job.jobType}</TableCell>
-                            <TableCell>{job.deadline}</TableCell>
+                            <TableCell>{new Date(job.deadline).toLocaleDateString()}</TableCell>
                             <TableCell className="flex space-x-2">
                                 {/* Edit Job Modal */}
                                 <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
@@ -180,13 +237,14 @@ export default function JobManager() {
                                         />
                                     </DialogContent>
                                 </Dialog>
-                                <Button variant="destructive" onClick={() => deleteJob(job.id)}>Delete</Button>
+                                <Button variant="destructive" onClick={() => deleteJob(job._id!)}>Delete</Button>
                                 <Button variant="outline" onClick={() => navigate(`/applicants/${job.id}`)}>View Applicants</Button>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <Toaster invert={true} />
         </div>
     );
 }
