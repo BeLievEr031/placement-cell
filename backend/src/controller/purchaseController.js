@@ -31,6 +31,8 @@ export const getUsersAllPurchases = async (req, res) => {
 export const getUserPurchase = async (req, res) => {
     try {
         const { clerkId, courseId } = req.query;
+        console.log(clerkId, courseId);
+
         const purchases = await Purchase.find({ clerkId, courseId }).populate("courseId");
 
         res.status(200).json({ data: purchases });

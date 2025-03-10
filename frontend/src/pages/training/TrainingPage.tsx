@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 import { Book, ExternalLink } from 'lucide-react';
 import { useFetchTrainingQuery } from '@/hooks/useTraining';
 
-const trainingResources = [
-  {
-    _id: "67cd7719107fc2152eb426b6",
-    title: "trainingstrainings",
-    level: "Advanced",
-    duration: "65 minutes",
-    price: 45,
-    description: "trainingstrainingstrainings",
-  },
-];
+// const trainingResources = [
+//   {
+//     _id: "67cd7719107fc2152eb426b6",
+//     title: "trainingstrainings",
+//     level: "Advanced",
+//     duration: "65 minutes",
+//     price: 45,
+//     description: "trainingstrainingstrainings",
+//   },
+// ];
 
 const TrainingPage = () => {
   const { data } = useFetchTrainingQuery();
@@ -52,9 +52,12 @@ const TrainingPage = () => {
                 <CardContent>
                   <p className="text-muted-foreground">{resource.description}</p>
                 </CardContent>
+                <CardContent>
+                  <p className="text-muted-foreground">Amount: {resource.price}$</p>
+                </CardContent>
                 <CardFooter>
                   <Button variant="outline" className="w-full" asChild>
-                    <Link to={`/training/${resource._id}`}>
+                    <Link to={`/training/${resource._id}`} state={{ resource }}>
                       Access Resource <ExternalLink className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>

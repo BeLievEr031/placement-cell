@@ -24,42 +24,44 @@ const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
 }
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* Auth Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/auth" element={<Auth />} />
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            {/* Auth Routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/auth" element={<Auth />} />
 
-          {/* Job Routes */}
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/jobs/new" element={<JobFormPage />} />
-          <Route path="/jobs/edit/:id" element={<JobFormPage />} />
-          <Route path="/jobs/:id" element={<JobDetailPage />} />
+            {/* Job Routes */}
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs/new" element={<JobFormPage />} />
+            <Route path="/jobs/edit/:id" element={<JobFormPage />} />
+            <Route path="/jobs/:id" element={<JobDetailPage />} />
 
-          {/* Event Routes */}
-          <Route path="/events" element={<EventsPage />} />
+            {/* Event Routes */}
+            <Route path="/events" element={<EventsPage />} />
 
-          {/* Training Routes */}
-          <Route path="/training" element={<TrainingPage />} />
-          <Route path="/training/:id" element={<AccessResource />} />
-          <Route path="/communication" element={<CommunicationPage />} />
+            {/* Training Routes */}
+            <Route path="/training" element={<TrainingPage />} />
+            <Route path="/training/:id" element={<AccessResource />} />
+            <Route path="/communication" element={<CommunicationPage />} />
 
-          <Route path="/faq" element={<FAQPage />} />
+            <Route path="/faq" element={<FAQPage />} />
 
-          {/* 404 Route - must be last */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </ClerkProvider>
+            {/* 404 Route - must be last */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </ClerkProvider>
 
-  </QueryClientProvider>
-);
+    </QueryClientProvider>
+  )
+};
 
 export default App;

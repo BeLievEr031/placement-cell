@@ -4,7 +4,8 @@ import { createPurchase, getUsersAllPurchases, getUserPurchase } from "../contro
 const purchaseRouter = express.Router();
 
 purchaseRouter.post("/", createPurchase);
-purchaseRouter.get("/:clerkId", getUsersAllPurchases);
 purchaseRouter.get("/single-course", getUserPurchase);
+
+purchaseRouter.get("/:clerkId", getUsersAllPurchases);
 
 export default purchaseRouter;
