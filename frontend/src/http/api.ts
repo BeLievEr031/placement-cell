@@ -21,3 +21,4 @@ export const deleteTraining = (id: string) => api.delete(`/training/${id}`)
 export const fetchLecture = (trainingId: string) => api.get(`/lecture?trainingId=${trainingId}`)
 export const filterLecture = (query: { title: string, jobType: string }) => api.get(`/lecture/filter?title=${query.title}&jobType=${query.jobType}`)
 export const deleteLecture = (id: string) => api.delete(`/lecture/${id}`)
+

@@ -7,6 +7,7 @@ import applicantsRouter from "./routes/applicantsRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
 import trainingRouter from "./routes/trainingRoutes.js";
 import lectureRouter from "./routes/lectureRoutes.js";
+import purchaseRouter from "./routes/purchaseRoutes.js";
 const app = express();
 
 app.use(express.json({ limit: "1MB" }))
@@ -21,5 +22,6 @@ app.use("/api/v1/placement/applicants", applicantsRouter)
 app.use("/api/v1/placement/event", eventRouter)
 app.use("/api/v1/placement/training", trainingRouter)
 app.use("/api/v1/placement/lecture", lectureRouter)
+app.use("/api/v1/placement/purchase", purchaseRouter)
 
 export default app;

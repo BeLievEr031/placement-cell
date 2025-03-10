@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Play, Video, CheckCircle, ChevronRight } from "lucide-react";
+import { Play, Video, CheckCircle } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 
 const lessons = [
