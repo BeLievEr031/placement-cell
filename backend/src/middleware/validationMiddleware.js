@@ -96,3 +96,9 @@ export const lectureSchema = Joi.object({
     title: Joi.string().min(3).max(100).required(),
     videoUrl: Joi.string().uri().required()
 });
+
+export const purchaseValidator = Joi.object({
+    clerkId: Joi.string().required(),
+    courseId: Joi.string().required(), // Assuming ObjectId is passed as a string
+    amount: Joi.number().positive().required(),
+});
