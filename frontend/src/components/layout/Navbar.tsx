@@ -1,16 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
 import { Menu, X, User } from 'lucide-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { isAuthenticated, user, logout } = useAuthStore();
   const location = useLocation();
-
+  const { isSignedIn } = useUser();
+  const { signOut } = useAuth();
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -35,13 +38,16 @@ const Navbar = () => {
     { name: 'FAQ', path: '/faq' },
   ];
 
+  const handleLogout = () => {
+    signOut();
+  }
+
   return (
-    <header 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/90 backdrop-blur-md shadow-sm'
-          : 'bg-transparent'
-      }`}
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/90 backdrop-blur-md shadow-sm'
+        : 'bg-transparent'
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -54,11 +60,10 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm transition-colors link-underline ${
-                  location.pathname === link.path
-                    ? 'text-primary font-medium'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`text-sm transition-colors link-underline ${location.pathname === link.path
+                  ? 'text-primary font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 {link.name}
               </Link>
@@ -66,13 +71,13 @@ const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            {isAuthenticated ? (
+            {isSignedIn ? (
               <div className="flex items-center gap-4">
-                <Link to="/profile" className="flex items-center gap-2 text-sm font-medium text-foreground">
+                {/* <Link to="/profile" className="flex items-center gap-2 text-sm font-medium text-foreground">
                   <User size={18} />
                   <span>{user?.name}</span>
-                </Link>
-                <Button variant="ghost" size="sm" onClick={logout}>
+                </Link> */}
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
                   Sign out
                 </Button>
               </div>
@@ -106,16 +111,15 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`block px-3 py-2 rounded-md text-sm ${
-                  location.pathname === link.path
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-foreground hover:bg-muted'
-                }`}
+                className={`block px-3 py-2 rounded-md text-sm ${location.pathname === link.path
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-foreground hover:bg-muted'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
-            {isAuthenticated ? (
+            {isSignedIn ? (
               <>
                 <Link
                   to="/profile"
@@ -124,7 +128,7 @@ const Navbar = () => {
                   Profile
                 </Link>
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="block w-full text-left px-3 py-2 rounded-md text-sm text-foreground hover:bg-muted"
                 >
                   Sign out

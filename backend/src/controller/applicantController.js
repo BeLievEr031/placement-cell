@@ -78,3 +78,20 @@ export const filterApplicants = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
+
+
+export const isApplied = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const applicants = await ApplicantModel.find({ jobId: id });
+        if (applicants) {
+            res.status(200).json({ applied: true });
+            return;
+        }
+
+        res.status(200).json({ applied: false });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
+

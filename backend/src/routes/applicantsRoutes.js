@@ -6,6 +6,7 @@ import {
     updateApplicant,
     deleteApplicant,
     filterApplicants,
+    isApplied,
 } from "../controller/applicantController.js";
 
 const applicantsRouter = express.Router();
@@ -16,5 +17,9 @@ applicantsRouter.get("/filter", filterApplicants); // Filter applicants by name 
 applicantsRouter.get("/:id", getApplicantById); // Get an applicant by ID
 applicantsRouter.put("/:id", updateApplicant); // Update an applicant
 applicantsRouter.delete("/:id", deleteApplicant); // Delete an applicant
+
+applicantsRouter.get("/job/:id", isApplied); // Delete an applicant
+
+
 
 export default applicantsRouter;

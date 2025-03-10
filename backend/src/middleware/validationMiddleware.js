@@ -24,6 +24,7 @@ export const validateJob = (req, res, next) => {
 export const applicantSchema = Joi.object({
     clerkId: Joi.string().required(),
     name: Joi.string().min(3).max(100).required(),
+    jobId: Joi.string().required(),
     phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
         "string.pattern.base": "Phone number must be 10 digits.",
     }),
