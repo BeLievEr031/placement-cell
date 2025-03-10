@@ -238,7 +238,7 @@ export default function JobManager() {
                                     </DialogContent>
                                 </Dialog>
                                 <Button variant="destructive" onClick={() => deleteJob(job._id!)}>Delete</Button>
-                                <Button variant="outline" onClick={() => navigate(`/applicants/${job.id}`)}>View Applicants</Button>
+                                <Button variant="outline" onClick={() => navigate(`/applicants/${job._id}`)}>View Applicants</Button>
                             </TableCell>
                         </TableRow>
                     ))}

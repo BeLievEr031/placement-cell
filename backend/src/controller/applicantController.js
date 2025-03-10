@@ -28,7 +28,9 @@ export const getApplicants = async (req, res) => {
 // ✅ Get an applicant by ID
 export const getApplicantById = async (req, res) => {
     try {
-        const applicant = await ApplicantModel.findById(req.params.id);
+        console.log(req.params.id);
+
+        const applicant = await ApplicantModel.find({ jobId: req.params.id });
         if (!applicant) return res.status(404).json({ message: "Applicant not found" });
         res.status(200).json(applicant);
     } catch (error) {
@@ -84,7 +86,8 @@ export const isApplied = async (req, res) => {
     try {
         const { id } = req.params;
         const applicants = await ApplicantModel.find({ jobId: id });
-        if (applicants) {
+
+        if (applicants.length > 0) {
             res.status(200).json({ applied: true });
             return;
         }

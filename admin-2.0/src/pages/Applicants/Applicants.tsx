@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FileText } from "lucide-react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 interface Applicant {
     id: number;
@@ -14,13 +16,33 @@ interface Applicant {
 }
 
 export default function ApplicantsPage() {
+    const { id } = useParams<{ id: string }>()
+    console.log(id);
+
     const [selectedResume, setSelectedResume] = useState<string | null>(null);
 
-    const applicants: Applicant[] = [
-        { id: 1, name: "John Doe", phone: "123-456-7890", address: "New York, USA", resumeUrl: "/resumes/john-doe.pdf" },
-        { id: 2, name: "Jane Smith", phone: "987-654-3210", address: "San Francisco, USA", resumeUrl: "/resumes/jane-smith.pdf" },
-        { id: 3, name: "Mike Johnson", phone: "555-666-7777", address: "Los Angeles, USA", resumeUrl: "/resumes/mike-johnson.pdf" },
-    ];
+    const [applicants, setApplicants] = useState<Applicant[] | []>([])
+
+    // const applicants: Applicant[] = [
+    //     { id: 1, name: "John Doe", phone: "123-456-7890", address: "New York, USA", resumeUrl: "/resumes/john-doe.pdf" },
+    //     { id: 2, name: "Jane Smith", phone: "987-654-3210", address: "San Francisco, USA", resumeUrl: "/resumes/jane-smith.pdf" },
+    //     { id: 3, name: "Mike Johnson", phone: "555-666-7777", address: "Los Angeles, USA", resumeUrl: "/resumes/mike-johnson.pdf" },
+    // ];
+
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const data = await axios.get(`http://localhost:5000/api/v1/placement/applicants/${id}`)
+                console.log(data.data);
+                setApplicants(data.data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetch();
+    }, [])
 
     return (
         <div className="p-6 space-y-6 ml-64">
@@ -60,7 +82,7 @@ export default function ApplicantsPage() {
                                                 </div>
                                                 {selectedResume ? (
                                                     <iframe
-                                                        src={"https://aspirant-lms-bucket.s3.ap-south-1.amazonaws.com/uploads/1740303057635-GRADE-11%2C%20MATHS%20FINAL%20EXAM.%20Final%20AK.pdf"}
+                                                        src={selectedResume}
                                                         className="w-full h-[500px] mt-4"
                                                         title="Resume PDF"
                                                     />
