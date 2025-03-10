@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { create } from 'zustand';
 
@@ -9,6 +10,7 @@ export type Job = {
   description: string;
   requirements: string[];
   type: 'Full-time' | 'Part-time' | 'Internship' | 'Contract';
+  jobType?: 'Full-time' | 'Part-time' | 'Internship' | 'Contract';
   salary?: string;
   postedDate: Date;
   deadline?: Date;
@@ -36,7 +38,7 @@ export const useJobStore = create<JobState>((set, get) => ({
     try {
       // Mock fetch delay
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const mockJobs: Job[] = [
         {
           id: '1',
@@ -77,7 +79,7 @@ export const useJobStore = create<JobState>((set, get) => ({
           createdBy: 'admin',
         },
       ];
-      
+
       set({ jobs: mockJobs, loading: false });
     } catch (error) {
       set({ error: 'Failed to fetch jobs', loading: false });
@@ -89,13 +91,13 @@ export const useJobStore = create<JobState>((set, get) => ({
     try {
       // Mock API delay
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const newJob: Job = {
         ...job,
         id: Date.now().toString(),
         postedDate: new Date(),
       };
-      
+
       set({ jobs: [...get().jobs, newJob], loading: false });
     } catch (error) {
       set({ error: 'Failed to add job', loading: false });
@@ -107,11 +109,11 @@ export const useJobStore = create<JobState>((set, get) => ({
     try {
       // Mock API delay
       await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const updatedJobs = get().jobs.map(job => 
+
+      const updatedJobs = get().jobs.map(job =>
         job.id === id ? { ...job, ...updatedJob } : job
       );
-      
+
       set({ jobs: updatedJobs, loading: false });
     } catch (error) {
       set({ error: 'Failed to update job', loading: false });
@@ -123,10 +125,10 @@ export const useJobStore = create<JobState>((set, get) => ({
     try {
       // Mock API delay
       await new Promise(resolve => setTimeout(resolve, 500));
-      
-      set({ 
+
+      set({
         jobs: get().jobs.filter(job => job.id !== id),
-        loading: false 
+        loading: false
       });
     } catch (error) {
       set({ error: 'Failed to delete job', loading: false });

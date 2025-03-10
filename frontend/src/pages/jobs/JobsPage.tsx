@@ -1,23 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Card, CardContent } from '@/components/ui/card';
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue
+// } from '@/components/ui/select';
+// import { Separator } from '@/components/ui/separator';
+// import { Card, CardContent } from '@/components/ui/card';
 import { Job, useJobStore } from '@/store/jobStore';
 import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/authStore';
 import { Search, Plus, Briefcase } from 'lucide-react';
+import { useFetchJobQuery } from '@/hooks/useJob';
 
 const JobsPage = () => {
+
+  const { data } = useFetchJobQuery();
+  console.log(data?.data);
+
+
   const { jobs, loading, fetchJobs } = useJobStore();
   const { isAuthenticated, user } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState('');
@@ -69,7 +76,7 @@ const JobsPage = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-lg font-medium mb-4">Filters</h2>
@@ -119,7 +126,7 @@ const JobsPage = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
 
           {/* Job Listings */}
           <div className="lg:col-span-3">
@@ -132,10 +139,10 @@ const JobsPage = () => {
                   <p className="text-muted-foreground">Loading jobs...</p>
                 </div>
               </div>
-            ) : filteredJobs.length > 0 ? (
+            ) : data?.data.length > 0 ? (
               <div className="grid grid-cols-1 gap-6">
-                {filteredJobs.map((job) => (
-                  <Link key={job.id} to={`/jobs/${job.id}`} className="group">
+                {data?.data.map((job) => (
+                  <Link key={job._id} to={`/jobs/${job._id}`} className="group">
                     <div className="bg-card border border-border rounded-lg p-6 transition-all duration-300 hover:shadow-md hover:border-primary/20">
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         <div>
@@ -145,11 +152,11 @@ const JobsPage = () => {
 
                           <div className="flex flex-wrap gap-2 mb-4">
                             <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
-                              {job.type}
+                              {job.jobType}
                             </span>
                             {job.salary && (
                               <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
-                                {job.salary}
+                                {"$" + job.salary}
                               </span>
                             )}
                           </div>
@@ -157,7 +164,7 @@ const JobsPage = () => {
                           <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{job.description}</p>
 
                           <p className="text-xs text-muted-foreground">
-                            Posted {new Date(job.postedDate).toLocaleDateString()}
+                            Posted {new Date(job.createdAt).toLocaleDateString()}
                             {job.deadline && (
                               <> · Deadline: {new Date(job.deadline).toLocaleDateString()}</>
                             )}

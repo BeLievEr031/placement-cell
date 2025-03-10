@@ -1,21 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 import { Job, useJobStore } from '@/store/jobStore';
 import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/authStore';
@@ -27,7 +28,7 @@ const JobFormPage = () => {
   const navigate = useNavigate();
   const { jobs, addJob, updateJob, fetchJobs } = useJobStore();
   const { user, isAuthenticated } = useAuthStore();
-  
+
   const [formData, setFormData] = useState({
     title: '',
     company: '',
@@ -38,7 +39,7 @@ const JobFormPage = () => {
     salary: '',
     deadline: null as Date | null,
   });
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const JobFormPage = () => {
         fetchJobs();
       } else {
         const jobToEdit = jobs.find(job => job.id === id);
-        
+
         if (jobToEdit) {
           setFormData({
             title: jobToEdit.title,
@@ -95,7 +96,7 @@ const JobFormPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const jobData = {
         title: formData.title,
@@ -109,7 +110,7 @@ const JobFormPage = () => {
         postedDate: new Date(),
         createdBy: user?.id || 'unknown',
       };
-      
+
       if (isEditMode && id) {
         await updateJob(id, jobData);
         toast("Job Updated", {
@@ -121,9 +122,9 @@ const JobFormPage = () => {
           description: "The new job posting has been successfully created.",
         });
       }
-      
+
       navigate('/jobs');
-    } catch (error) {
+    } catch (error: any) {
       toast("Error", {
         description: `Failed to ${isEditMode ? 'update' : 'create'} job posting. Please try again.`,
       });
@@ -139,7 +140,7 @@ const JobFormPage = () => {
           <h1 className="text-3xl font-bold mb-8">
             {isEditMode ? 'Edit Job Posting' : 'Create New Job Posting'}
           </h1>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title">Job Title</Label>
@@ -152,7 +153,7 @@ const JobFormPage = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="company">Company Name</Label>
               <Input
@@ -164,7 +165,7 @@ const JobFormPage = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
               <Input
@@ -176,7 +177,7 @@ const JobFormPage = () => {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="type">Job Type</Label>
@@ -195,7 +196,7 @@ const JobFormPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="salary">Salary Range (Optional)</Label>
                 <Input
@@ -207,7 +208,7 @@ const JobFormPage = () => {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="description">Job Description</Label>
               <Textarea
@@ -220,7 +221,7 @@ const JobFormPage = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="requirements">
                 Requirements (One per line)
@@ -238,7 +239,7 @@ const JobFormPage = () => {
                 Enter each requirement on a new line.
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="deadline">Application Deadline (Optional)</Label>
               <Popover>
@@ -266,7 +267,7 @@ const JobFormPage = () => {
                 </PopoverContent>
               </Popover>
             </div>
-            
+
             <div className="flex justify-end space-x-4 pt-4">
               <Button
                 type="button"
@@ -277,8 +278,8 @@ const JobFormPage = () => {
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading 
-                  ? (isEditMode ? 'Updating...' : 'Creating...') 
+                {isLoading
+                  ? (isEditMode ? 'Updating...' : 'Creating...')
                   : (isEditMode ? 'Update Job' : 'Create Job')
                 }
               </Button>
