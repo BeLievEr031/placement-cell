@@ -18,12 +18,12 @@ import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/authStore';
 import { Search, Plus, Briefcase } from 'lucide-react';
 import { useFetchJobQuery } from '@/hooks/useJob';
+import SearchBar from '@/components/ui/SearchBar';
 
 const JobsPage = () => {
 
-  const { data } = useFetchJobQuery();
-  console.log(data?.data);
-
+  const [search, setSearch] = useState("")
+  const { refetch, data } = useFetchJobQuery(search);
 
   const { jobs, loading, fetchJobs } = useJobStore();
   const { isAuthenticated, user } = useAuthStore();
@@ -55,6 +55,10 @@ const JobsPage = () => {
 
   const canCreateJob = isAuthenticated && (user?.role === 'company' || user?.role === 'admin');
 
+  const handleSearch = () => {
+    refetch();
+  }
+
   return (
     <PageLayout>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -74,7 +78,9 @@ const JobsPage = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <SearchBar search={search} setSearch={setSearch} handleSearch={handleSearch} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-2">
           {/* Filters */}
           {/* <div className="lg:col-span-1">
             <Card>

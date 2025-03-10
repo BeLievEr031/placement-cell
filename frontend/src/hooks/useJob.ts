@@ -12,10 +12,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 //     })
 // }
 
-export const useFetchJobQuery = () => {
+export const useFetchJobQuery = (search: string) => {
     return useQuery({
         queryKey: ["fetch-all-job"],
-        queryFn: fetchJob
+        queryFn: () => fetchJob(search)
     })
 }
 

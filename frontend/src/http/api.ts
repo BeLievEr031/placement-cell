@@ -2,7 +2,7 @@ import api from ".";
 
 
 // export const createNewJob = (data: Job) => api.post("/job", data)
-export const fetchJob = () => api.get("/job")
+export const fetchJob = (search: string) => api.get(`/job?title=${search}`)
 export const fetchJobById = (id: string) => api.get(`/job/${id}`)
 export const filterJob = (query: { title: string, jobType: string }) => api.get(`/job/filter?title=${query.title}&jobType=${query.jobType}`)
 export const deleteJob = (id: string) => api.delete(`/job/${id}`)

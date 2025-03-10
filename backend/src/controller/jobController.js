@@ -14,7 +14,11 @@ export const createJob = async (req, res) => {
 // Get All Jobs
 export const getAllJobs = async (req, res) => {
     try {
-        const jobs = await JobModel.find();
+        const { title } = req.query;
+
+        const jobs = await JobModel.find({
+            title: { $regex: title ? title : "", $options: "i" },
+        });
         res.status(200).json(jobs);
     } catch (error) {
         res.status(500).json({ error: "Error fetching jobs" });
