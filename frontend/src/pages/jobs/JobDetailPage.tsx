@@ -63,7 +63,8 @@ const JobDetailPage = () => {
       setIsUploading(true);
       const formData = new FormData();
       formData.append("file", form.resume);
-      formData.append("upload_preset", "placements-cell");
+      formData.append("upload_preset", "placement-cell-pdf");
+      formData.append("resource_type", "auto");
 
       const { data } = await axios.post(
         `https://api.cloudinary.com/v1_1/dfmuea3kz/raw/upload`,
@@ -75,6 +76,8 @@ const JobDetailPage = () => {
           },
         }
       );
+
+      console.log(data);
 
       setResumeUrl(data.secure_url);
       toast.success("Resume uploaded successfully!");
