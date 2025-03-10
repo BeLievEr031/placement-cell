@@ -3,8 +3,6 @@ import Training from "../model/trainingModel.js";
 import express from "express";
 const paymentRouter = express.Router();
 
-console.log(process.env.PORT);
-
 const razorpay = new Razorpay({
     key_id: "rzp_test_cMQQFYPaYpEzfm",
     key_secret: "NoAeuXHpFwz0WqO9y3U1UaWf",
