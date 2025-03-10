@@ -22,3 +22,17 @@ export const fetchLecture = (trainingId: string) => api.get(`/lecture?trainingId
 export const filterLecture = (query: { title: string, jobType: string }) => api.get(`/lecture/filter?title=${query.title}&jobType=${query.jobType}`)
 export const deleteLecture = (id: string) => api.delete(`/lecture/${id}`)
 
+export const createNewPurchase = (data: {
+    clerkId: string;
+    courseId: string;
+    amount: number;
+}) => api.post("/purchase", data)
+
+
+
+export const fetchSinglePurchase = (query: { clerkId: string; courseId: string }) => api.get(`/purchase/single-course?clerkId=${query.clerkId}&courseId=${query.courseId}`)
+
+export const filterPurchase = (query: { title: string, jobType: string }) => api.get(`/lecture/filter?title=${query.title}&jobType=${query.jobType}`)
+
+export const fetchAllLectures = (id: string) => api.get(`/purchase/${id}`)
+
