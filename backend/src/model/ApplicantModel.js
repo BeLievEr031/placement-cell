@@ -10,6 +10,7 @@ const applicantSchema = new mongoose.Schema(
         address: { type: String, required: true, trim: true },
         resumeUrl: { type: String, required: true, trim: true, match: /^https?:\/\/.+/ }, // Ensures valid URL
         // percentage: { type: Number, required: false }
+        status: { type: String, trim: true }
     },
     {
         timestamps: true, // Adds createdAt & updatedAt fields

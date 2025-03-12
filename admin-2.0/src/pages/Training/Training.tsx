@@ -167,7 +167,7 @@ export default function Training() {
                             <TableCell>{program.duration}</TableCell>
                             <TableCell>{program.price}</TableCell>
                             <TableCell className="flex space-x-2">
-                                <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
+                                {/* <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
                                     <DialogTrigger asChild>
                                         <Button onClick={() => { setEditTraining(program); setIsEditing(true); setIsDialogOpen(true); }}>
                                             Edit
@@ -181,7 +181,7 @@ export default function Training() {
                                             isEditing={true}
                                         />
                                     </DialogContent>
-                                </Dialog>
+                                </Dialog> */}
                                 <Button variant="destructive" onClick={() => deleteTraining(program._id!)}>Delete</Button>
                                 <Button onClick={() => navigate(`/add-videos/${program.title + "-" + program._id!}`)}>Manage Videos</Button>
                             </TableCell>

@@ -2,24 +2,54 @@ import { Briefcase, Users, CalendarDays, Building, ChevronRight } from "lucide-r
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { fetchStats } from "@/http/api";
+import { useState } from "react";
 
 export default function Home() {
+    const [data, setData] = useState<{
+        amount: number,
+        applicantsCount: number,
+        eventCount: number,
+        jobCount: number,
+        lectureCount: number,
+        trainingCount: number
+    }>({
+        amount: 0,
+        applicantsCount: 0,
+        eventCount: 0,
+        jobCount: 0,
+        lectureCount: 0,
+        trainingCount: 0
+    })
+    const handleFetchStat = async () => {
+        const stats = await fetchStats();
+        console.log(stats.data);
+        setData(stats.data)
+    }
+
+
     return (
         <div className="p-6 space-y-6 ml-64">
             <h1 className="text-2xl font-bold">Placement Cell Dashboard</h1>
-
+            <Button onClick={handleFetchStat}>Generate Report</Button>
             {/* Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <OverviewCard icon={<Briefcase size={28} />} title="Total Jobs" count="124" color="bg-blue-600" />
-                <OverviewCard icon={<Users size={28} />} title="Total Candidates" count="430" color="bg-green-600" />
-                <OverviewCard icon={<CalendarDays size={28} />} title="Interviews Scheduled" count="28" color="bg-yellow-600" />
-                <OverviewCard icon={<Building size={28} />} title="Companies" count="58" color="bg-purple-600" />
+                <OverviewCard icon={<Briefcase size={28} />} title="Total Amount" count={data?.amount + ""} color="bg-blue-600" />
+                <OverviewCard icon={<Users size={28} />} title="Total Candidates" count={data?.applicantsCount + ""} color="bg-green-600" />
+                {/* <OverviewCard icon={<CalendarDays size={28} />} title="Interviews Scheduled" count="28" color="bg-yellow-600" /> */}
+                <OverviewCard icon={<Building size={28} />} title="Total Jobs" count={data?.jobCount + ""} color="bg-purple-600" />
+                <OverviewCard icon={<Users size={28} />} title="Total Training" count={data?.trainingCount + ""} color="bg-green-600" />
+                {/* <OverviewCard icon={<CalendarDays size={28} />} title="Interviews Scheduled" count="28" color="bg-yellow-600" /> */}
+                <OverviewCard icon={<Building size={28} />} title="Total Events" count={data?.eventCount + ""} color="bg-purple-600" />
+
+                <OverviewCard icon={<Building size={28} />} title="Total Lecture" count={data?.lectureCount + ""} color="bg-blue-600" />
             </div>
 
             {/* Recent Jobs & Upcoming Interviews */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <RecentJobs />
-                <UpcomingInterviews />
+                {/* <RecentJobs /> */}
+                {/* <UpcomingInterviews /> */}
             </div>
         </div>
     );

@@ -6,21 +6,23 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FileText } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { sendEmailMessage } from "@/http/api";
+import { toast, Toaster } from "sonner";
 
-interface Applicant {
+export interface Applicant {
+    _id?: string;
     id: number;
     name: string;
     phone: string;
     address: string;
     resumeUrl: string;
+    status?: string;
 }
 
 export default function ApplicantsPage() {
     const { id } = useParams<{ id: string }>()
-    console.log(id);
-
     const [selectedResume, setSelectedResume] = useState<string | null>(null);
-
+    const [isStatus, setStatus] = useState(false)
     const [applicants, setApplicants] = useState<Applicant[] | []>([])
 
     // const applicants: Applicant[] = [
@@ -42,7 +44,28 @@ export default function ApplicantsPage() {
         }
 
         fetch();
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isStatus])
+
+    const handleAcceptReject = async (type: string, info: Applicant) => {
+        if (type === "accept") {
+            const data: Applicant = {
+                ...info,
+                status: "shortlisted"
+            }
+
+            toast.success("Apllication shortlisted.")
+            await sendEmailMessage(data);
+        } else {
+            const data: Applicant = {
+                ...info,
+                status: "rejected"
+            }
+            toast.success("Apllication rejected.")
+            await sendEmailMessage(data);
+        }
+        setStatus(!isStatus)
+    }
 
     return (
         <div className="p-6 space-y-6 ml-64">
@@ -61,11 +84,11 @@ export default function ApplicantsPage() {
                         </TableHeader>
                         <TableBody>
                             {applicants.map((applicant) => (
-                                <TableRow key={applicant.id}>
+                                <TableRow key={applicant._id}>
                                     <TableCell>{applicant.name}</TableCell>
                                     <TableCell>{applicant.phone}</TableCell>
                                     <TableCell>{applicant.address}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex gap-2">
                                         <Sheet>
                                             <SheetTrigger asChild>
                                                 <Button
@@ -91,6 +114,14 @@ export default function ApplicantsPage() {
                                                 )}
                                             </SheetContent>
                                         </Sheet>
+                                        <Button className="bg-green-800"
+                                            disabled={applicant.status === "accept" ? true : false}
+                                            onClick={() => handleAcceptReject("accept", applicant)
+                                            }
+                                        >{applicant.status === "accept" ? "Accepted" : "Accept"}</Button>
+                                        <Button variant={"destructive"}
+                                            onClick={() => handleAcceptReject("reject", applicant)}
+                                        >{applicant.status === "reject" ? "Rejected" : "Reject"}</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -98,6 +129,7 @@ export default function ApplicantsPage() {
                     </Table>
                 </CardContent>
             </Card>
+            <Toaster />
         </div>
     );
 }

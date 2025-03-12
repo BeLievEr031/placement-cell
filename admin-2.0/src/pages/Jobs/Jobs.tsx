@@ -222,7 +222,7 @@ export default function JobManager() {
                             <TableCell>{new Date(job.deadline).toLocaleDateString()}</TableCell>
                             <TableCell className="flex space-x-2">
                                 {/* Edit Job Modal */}
-                                <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
+                                {/* <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
                                     <DialogTrigger asChild>
                                         <Button onClick={() => { setEditJob(job); setIsEditing(true); setIsDialogOpen(true); }}>
                                             Edit
@@ -236,7 +236,7 @@ export default function JobManager() {
                                             isEditing={isEditing}
                                         />
                                     </DialogContent>
-                                </Dialog>
+                                </Dialog> */}
                                 <Button variant="destructive" onClick={() => deleteJob(job._id!)}>Delete</Button>
                                 <Button variant="outline" onClick={() => navigate(`/applicants/${job._id}`)}>View Applicants</Button>
                             </TableCell>

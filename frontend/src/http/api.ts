@@ -38,3 +38,4 @@ export const fetchAllPurchases = (id: string) => api.get(`/purchase/${id}`)
 
 
 export const createPaymentOrder = (data: { id: string }) => api.post(`/payment/create-order`, data)
+

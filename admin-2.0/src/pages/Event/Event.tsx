@@ -189,7 +189,7 @@ export default function EventManager() {
                             <TableCell>{new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}</TableCell>
                             <TableCell>{event.location}</TableCell>
                             <TableCell className="flex space-x-2">
-                                <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
+                                {/* <Dialog open={isDialogOpen && isEditing} onOpenChange={setIsDialogOpen}>
                                     <DialogTrigger asChild>
                                         <Button onClick={() => {
                                             setEditEvent(event);
@@ -207,7 +207,7 @@ export default function EventManager() {
                                             isEditing={true}
                                         />
                                     </DialogContent>
-                                </Dialog>
+                                </Dialog> */}
                                 <Button variant="destructive" onClick={() => deleteEvent(event._id!)}>Delete</Button>
                             </TableCell>
                         </TableRow>
